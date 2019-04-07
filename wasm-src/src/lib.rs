@@ -9,7 +9,7 @@ mod World;
 /// there is no JS class named `Quacks`
 
 static CIRCLE: i16 = 1;
-static G: f64 = 1.0;
+static G: f64 = 10.0;
 
 #[wasm_bindgen]
 pub struct Engine {
@@ -58,6 +58,10 @@ impl Engine {
                 target_shape.get_velocity_x() * f64::from(delta) * 0.001
                     + target_shape.get_coordinate_x(),
             );
+            target_shape.set_coordinate_y(
+                target_shape.get_velocity_y() * f64::from(delta) * 0.001
+                    + target_shape.get_coordinate_y(),
+            );
             index_i+=1;
         }
     }
@@ -69,19 +73,38 @@ impl Engine {
     ) -> (f64, f64) {
         if target as *const _ == other as *const _ {
             return (0.0, 0.0);
-        } else {
-            let delta_position_x = other.get_coordinate_x() - target.get_coordinate_x();
-            let delta_velocity_x =
-                G * other.get_mass() / (delta_position_x.powi(2)) * f64::from(delta) * 0.001;
-            let delta_position_y = target.get_coordinate_y() - other.get_coordinate_y();
-            let delta_velocity_y =
-                G * other.get_mass() / (delta_position_y.powi(2)) * f64::from(delta) * 0.001;
-            return (delta_velocity_x, delta_velocity_y);
+        // } else {
+        //     let delta_position_x = other.get_coordinate_x() - target.get_coordinate_x();
+        //     if (delta_position_x < 0.01){
+        //             let delta_velocity_x =0;
+        //     }else {
+        //     let delta_velocity_x =
+        //         G * other.get_mass() / (delta_position_x.powi(2)) * f64::from(delta) * 0.001;
+        //      }
+        //     let delta_position_y = target.get_coordinate_y() - other.get_coordinate_y();
+
+        //      if (delta_position_y < 0.01){
+        //             let delta_velocity_y =0;
+        //      }else {
+        //     let delta_velocity_y =
+        //         G * other.get_mass() / (delta_position_y.powi(2)) * f64::from(delta) * 0.001;
+        //      }
+        //     return (delta_velocity_x, delta_velocity_y);
+        // }
         }
+        let posi_vec_x = other.get_coordinate_x() - target.get_coordinate_x(); 
+        let posi_vec_y = other.get_coordinate_y() - target.get_coordinate_y();
+        let base =  (posi_vec_x.powi(2) + posi_vec_y.powi(2)).sqrt();
+        if (base<0.01){
+            return (0.0, 0.0,);
+        }
+        let delta_v = G * other.get_mass() / (posi_vec_x.powi(2) + posi_vec_y.powi(2)) * f64::from(delta) * 0.001;
+        let delta_v_x = delta_v * posi_vec_x / base;
+        let delta_v_y = delta_v * posi_vec_y / base;
+        return (delta_v_x, delta_v_y);
     }
 
     pub fn add_one(&mut self, duck: World::Shape) {
         self.world.add_one(duck);
     }
-
 }
