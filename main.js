@@ -1,11 +1,23 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {
+  app,
+  BrowserWindow
+} = require('electron')
+
+
+const {
+  protocol
+} = require('electron')
+const nfs = require('fs')
+const npjoin = require('path').join
+const es6Path = npjoin(__dirname, '')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+protocol.registerStandardSchemes(['es6'])
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
@@ -19,7 +31,7 @@ function createWindow () {
   mainWindow.loadFile('index.html')
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -28,7 +40,32 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+  protocol.registerBufferProtocol('es6', (req, cb) => {
+    console.log(req)
+    nfs.readFile(
+      npjoin(es6Path, req.url.replace('es6://', '')),
+      (e, b) => {
+        cb({
+          mimeType: 'text/javascript',
+          data: b
+        })
+      }
+    )
+    //mainWindow.loadURL(req)
+  });
+
+
 }
+
+
+// const es6Path = npjoin(__dirname, 'www')
+
+
+
+// app.on('ready', () => {
+//   createWindow();
+
+// })
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

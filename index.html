@@ -1,19 +1,49 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
 
-    <script>
-      // You can also require other files to run in this process
-      require('./renderer.js')
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>Hello World!</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.8.7/pixi.min.js"></script>
+</head>
+
+<body>
+  <h1>Hello World!</h1>
+  <!-- All of the Node.js APIs are available in this renderer process. -->
+  We are using Node.js <script>
+    document.write(process.versions.node)
+  </script>,
+  Chromium <script>
+    document.write(process.versions.chrome)
+  </script>,
+  and Electron <script>
+    document.write(process.versions.electron)
+  </script>
+  <script src="es6://ShapeDefination.js"></script>
+  <script type="module">
+    import * as gwasm from 'es6://./wasm-src/pkg/Eletron_Wasm.js'
+    console.log(gwasm);
+    window.gwasm = gwasm;
+    // window.gg = fetch("./wasm/wasm_test_bg.wasm")
+    // .then(response =>
+    //   response.arrayBuffer()
+    //  )
+    // .then(bytes => {
+    //   let importObject = {
+    //   "./wasm_test": wasm 
+    // }
+    //   return WebAssembly.instantiate(bytes, importObject)
+    // }).then(
+    //   results => {
+    //     window.container = results.instance.exports.container_new()
+    //     console.log(results);
+    //   }
+    // )
+  </script>
+  <script>
+    // You can also require other files to run in this process
+    require('./renderer.js')
+  </script>
+</body>
+
 </html>
