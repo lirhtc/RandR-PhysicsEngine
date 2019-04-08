@@ -25,4 +25,4 @@ npm i
 npm start
 ```
 
-Then you will see a new window with a button. Click the button to run de demo
+Then you will see a new window with a button. Click the button to run the demo
