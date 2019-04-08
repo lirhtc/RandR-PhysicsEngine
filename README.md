@@ -22,6 +22,7 @@ You need `npm` to run the demo:
 git clone git@github.com:lirhtc/RandR-PhysicsEngine.git
 cd RandR-PhysicsEngine
 npm i
+wasm-pack build --target web
 npm start
 ```
 
