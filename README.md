@@ -17,10 +17,12 @@ The physics engine is implemented by Rust and a .wasm libaray provides the effic
 
 ## Run the dome
 
-You need `npm` to run the demo:
-`git clone git@github.com:lirhtc/RandR-PhysicsEngine.git`  
-`cd RandR-PhysicsEngine`  
-`npm i`  
-`npm start`  
+You need `npm` to run the demo:   
+```
+git clone git@github.com:lirhtc/RandR-PhysicsEngine.git
+cd RandR-PhysicsEngine
+npm i
+npm start
+```
 
 Then you will see a new window with a button. Click the button to run de demo
