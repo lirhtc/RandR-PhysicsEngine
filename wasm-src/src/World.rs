@@ -94,4 +94,10 @@ impl World {
     pub fn get_all_shapes(& self) -> Vec<Shape> {
         return self.shapes.to_vec();
     }
+
+    pub fn remove_all_shpaes(&mut self){
+        self.shapes.clear();
+    }
 }
+
+

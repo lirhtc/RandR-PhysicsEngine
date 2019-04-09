@@ -95,7 +95,7 @@ impl Engine {
         let posi_vec_x = other.get_coordinate_x() - target.get_coordinate_x(); 
         let posi_vec_y = other.get_coordinate_y() - target.get_coordinate_y();
         let base =  (posi_vec_x.powi(2) + posi_vec_y.powi(2)).sqrt();
-        if (base<0.01){
+        if (base<1.1){
             return (0.0, 0.0,);
         }
         let delta_v = G * other.get_mass() / (posi_vec_x.powi(2) + posi_vec_y.powi(2)) * f64::from(delta) * 0.001;
@@ -106,5 +106,9 @@ impl Engine {
 
     pub fn add_one(&mut self, duck: World::Shape) {
         self.world.add_one(duck);
+    }
+
+    pub fn clear_world(&mut self){
+        self.world.remove_all_shpaes();
     }
 }
