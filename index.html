@@ -8,43 +8,22 @@
 </head>
 
 <body>
-  <h1>Hello World!</h1>
-  <!-- All of the Node.js APIs are available in this renderer process. -->
-  We are using Node.js <script>
-    document.write(process.versions.node)
-  </script>,
-  Chromium <script>
-    document.write(process.versions.chrome)
-  </script>,
-  and Electron <script>
-    document.write(process.versions.electron)
-  </script>
   <script src="es6://./ShapeDefination.js"></script>
   <script src="es6://./demo.js"></script>
-  <button onclick="demo()">Play Demo</button>
+  <button onclick="demo_twoBody()" id="twobody" disabled=true>Two body</button>
+  <button onclick="demo_threeBody()" id="threebody" disabled=true>Three body</button>
   <script type="module">
     import * as gwasm from 'es6://./wasm-src/pkg/Eletron_Wasm.js'
     console.log(gwasm);
     window.gwasm = gwasm;
-    // window.gg = fetch("./wasm/wasm_test_bg.wasm")
-    // .then(response =>
-    //   response.arrayBuffer()
-    //  )
-    // .then(bytes => {
-    //   let importObject = {
-    //   "./wasm_test": wasm 
-    // }
-    //   return WebAssembly.instantiate(bytes, importObject)
-    // }).then(
-    //   results => {
-    //     window.container = results.instance.exports.container_new()
-    //     console.log(results);
-    //   }
-    // )
+    
   </script>
+  <div id="slider"></div>
   <script>
     // You can also require other files to run in this process
     require('./renderer.js')
+
+    (prepareStage())()
   </script>
 </body>
 

@@ -53,13 +53,13 @@ class Shape {
 }
 
 class Circle extends Shape {
-    constructor(radius) {
+    constructor(radius, color = 0xFFCC00) {
         super(0, 0);
         this.radius = radius;
         this.mass = 1;
         this.velocity_x = 0;
         this.velocity_y = 0;
-        this.renderable = this._get_renderable(radius);
+        this.renderable = this._get_renderable(radius, color);
     }
 
     get get_coordinate_x() {
@@ -78,9 +78,9 @@ class Circle extends Shape {
         this.renderable.y = value;
     }
 
-    _get_renderable(radius) {
+    _get_renderable(radius, color) {
         let circle = new PIXI.Graphics();
-        circle.beginFill(0xFFCC00, 1);
+        circle.beginFill(color, 1);
         circle.drawCircle(radius, radius, radius);
         let sprite = new PIXI.Sprite();
         sprite.addChild(circle);
