@@ -20,7 +20,7 @@ The physics engine is implemented by Rust and a .wasm libaray provides the effic
 You need `npm` to run the demo:   
 ```
 git clone git@github.com:lirhtc/RandR-PhysicsEngine.git
-cd RandR-PhysicsEngine
+cd RandR-PhysicsEngine/wasm-src
 npm i
 wasm-pack build --target web
 npm start
