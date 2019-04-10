@@ -23,6 +23,7 @@ git clone git@github.com:lirhtc/RandR-PhysicsEngine.git
 cd RandR-PhysicsEngine/wasm-src
 npm i
 wasm-pack build --target web
+cd ..
 npm start
 ```
 
