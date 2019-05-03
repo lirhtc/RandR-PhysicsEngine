@@ -76,7 +76,7 @@ function prepareStage() {
         .then(
             t => {
                 let wo = new gwasm.World();
-                let engin = new gwasm.Engine(wo)
+                let engin = new gwasm.Engine(wo);
                 window.engine = engin;
                 setInterval(function () {
                     engin.tick(10)
@@ -105,4 +105,11 @@ var fullColorHex = function (r, g, b) {
 var massToColor = function (mass) {
     let factor = Math.log10(mass);
     return parseInt(fullColorHex(250, Math.round(factor * 50), 10), 16);
+}
+
+var append = function (t) {
+    for (let i=0; i<1000000; i++){
+        t.push(1);
+    }
+    t.set = function(){}
 }
