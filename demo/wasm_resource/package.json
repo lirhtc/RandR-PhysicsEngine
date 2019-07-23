@@ -1,0 +1,15 @@
+{
+  "name": "Eletron_Wasm",
+  "collaborators": [
+    "Ruiheng <tikka0755@gmail.com>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "Eletron_Wasm_bg.wasm",
+    "Eletron_Wasm.js",
+    "Eletron_Wasm.d.ts"
+  ],
+  "module": "Eletron_Wasm.js",
+  "types": "Eletron_Wasm.d.ts",
+  "sideEffects": "false"
+}
