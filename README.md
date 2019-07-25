@@ -3,17 +3,22 @@ Wasm library of a fast physicsEngine
 
 The physics engine is implemented by Rust and a .wasm libaray provides the efficency in Javascript envrionment.
 
-## Features list:
+## Roadmap   
+- [x] Stage 0: Proof of concept: Three bodies demo    **【Completed】 in 2019-04**   
+- [ ] Stage 1: Collision enabled for convex polygon   **【In progress ..】**   
+- [ ] Stage 2: Rotation enabled for convex polygon    **【Planned】**   
+- [ ] Stage 3: Speed Optimization ## Planned      
 
-- [x] Gravity (alpha version)
-- [ ] Friction
-- [ ] Collision
-- [ ] Penetration Detection
+Possible optimization options:   
+1. Vectorized all shapes internally.
+2. Add grid to a world
+3. [maybe] multi-thread support
+
+## Feature in consideration:
+1. True curve support
+2. GPU support
 
 
-## Support shapes:
-- [x] Circle (alpha version)
-- [ ] Ranctange
 
 ## Run the dome
 
@@ -26,4 +31,5 @@ npm start
 ```
 
 Then you will see a new window with a button. Click the button to run the demo
+
 
