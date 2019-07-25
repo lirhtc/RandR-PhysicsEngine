@@ -10,6 +10,7 @@ mod vertex {
 pub struct ConvexPolygon {
     coordinates: [f64; 2],
     velocities: [f64; 2],
+    mass: f64,
     vertices: Vec<vertex::Vertex>,
 }
 
@@ -19,6 +20,7 @@ impl ConvexPolygon {
         ConvexPolygon {
             coordinates: [0.0, 0.0],
             velocities: [0.0, 0.0],
+            mass: 1.0,
             vertices: Vec::new(),
         }
     }
@@ -38,10 +40,28 @@ impl ConvexPolygon {
     pub fn getVelocityY(&self) -> f64 {
         self.velocities[1]
     }
+
+    pub fn getMass(self) -> f64 {
+        self.mass
+    }
+
+    pub fn setMass(&mut self, newMass: f64) {
+        self.mass = newMass;
+    }
+
+    pub fn addVertex(&mut self, x: f64, y: f64) {
+        self.vertices.push(vertex::Vertex {
+            coordinates: [x, y],
+        });
+    }
 }
 
 impl ConvexPolygon {
-    pub fn gett(&self) -> &vertex::Vertex {
-        return &self.vertices[0];
+    pub fn getAllVertices(&self) -> &Vec<vertex::Vertex> {
+        return &self.vertices;
+    }
+
+    pub fn getVelocity(&self) -> [f64; 2] {
+        self.velocities
     }
 }

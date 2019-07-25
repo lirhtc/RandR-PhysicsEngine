@@ -10,7 +10,6 @@ use wasm_bindgen::prelude::*;
 // static CIRCLE: i16 = 1;
 // static G: f64 = 10.0;
 
-
 // #[wasm_bindgen]
 // pub struct Engine {
 //     world: World::World,
@@ -92,7 +91,7 @@ use wasm_bindgen::prelude::*;
 //         //     return (delta_velocity_x, delta_velocity_y);
 //         // }
 //         }
-//         let posi_vec_x = other.get_coordinate_x() - target.get_coordinate_x(); 
+//         let posi_vec_x = other.get_coordinate_x() - target.get_coordinate_x();
 //         let posi_vec_y = other.get_coordinate_y() - target.get_coordinate_y();
 //         let base =  (posi_vec_x.powi(2) + posi_vec_y.powi(2)).sqrt();
 //         if (base<1.1){
@@ -128,4 +127,4 @@ use wasm_bindgen::prelude::*;
 // //https://stackoverflow.com/questions/24110970/tuple-struct-constructor-complains-about-private-fields
 
 mod shape;
-
+mod world;
