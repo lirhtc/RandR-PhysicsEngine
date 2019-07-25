@@ -128,3 +128,4 @@ use wasm_bindgen::prelude::*;
 
 mod shape;
 mod world;
+mod collision;
