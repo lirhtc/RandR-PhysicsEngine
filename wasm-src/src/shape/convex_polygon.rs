@@ -16,7 +16,7 @@ pub struct ConvexPolygon {
 
 #[wasm_bindgen]
 impl ConvexPolygon {
-    fn new() -> ConvexPolygon {
+    pub fn new() -> ConvexPolygon {
         ConvexPolygon {
             coordinates: [0.0, 0.0],
             velocities: [0.0, 0.0],
