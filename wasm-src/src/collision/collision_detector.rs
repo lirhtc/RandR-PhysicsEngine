@@ -15,11 +15,11 @@ impl CollisionDetectorAabb {
     pub fn collision_detect_polygon_polygon(first: &ConvexPolygon, second: &ConvexPolygon) -> bool {
         let first_boundary = CollisionDetectorAabb::get_aabb_boundaries(first);
         let second_boundary = CollisionDetectorAabb::get_aabb_boundaries(second);
-        let horizontal_cross = ((first_boundary[0] - second_boundary[0]) * (first_boundary[0] - second_boundary[1])  <= 0.0)
-        || ((first_boundary[1] - second_boundary[0]) * (first_boundary[1] - second_boundary[1])  <= 0.0);
+        let horizontal_cross = ((first_boundary[0] - second_boundary[0]) * (first_boundary[0] - second_boundary[1]) <= 0.0)
+            || ((first_boundary[1] - second_boundary[0]) * (first_boundary[1] - second_boundary[1]) <= 0.0);
         let vertical_cross = ((first_boundary[2] - second_boundary[2]) * (first_boundary[2] - second_boundary[3]) <= 0.0)
-        || ((first_boundary[3] - second_boundary[2]) * (first_boundary[3] - second_boundary[3]) <= 0.0);
-        return horizontal_cross &&  vertical_cross;
+            || ((first_boundary[3] - second_boundary[2]) * (first_boundary[3] - second_boundary[3]) <= 0.0);
+        return horizontal_cross && vertical_cross;
     }
 }
 
@@ -27,7 +27,7 @@ impl CollisionDetectorAabb {
     // for a given convex polygon, return a list of:
     // min_x, min_y, max_x, max_y
     // in the order specified above
-    fn get_aabb_boundaries(polygon: &ConvexPolygon)-> [f64; 4]{
+    fn get_aabb_boundaries(polygon: &ConvexPolygon) -> [f64; 4] {
         let mut boundary = [f64::MAX, f64::MIN, f64::MAX, f64::MIN];
         let vertex_iter = polygon.getAllVertices().iter();
         for vertex in vertex_iter {

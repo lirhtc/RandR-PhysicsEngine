@@ -41,11 +41,19 @@ impl ConvexPolygon {
         self.velocities[1]
     }
 
-    pub fn getMass(self) -> f64 {
+    pub fn setVelocityX(&mut self, newV: f64) {
+        self.velocities[0] = newV;
+    }
+
+    pub fn setVelocityY(&mut self, newV: f64){
+        self.velocities[1] = newV;
+    }
+
+    pub fn getMass(&self) -> f64 {
         self.mass
     }
 
-    pub fn setMass(&mut self, newMass: f64) {
+    pub fn setMass(mut self, newMass: f64) {
         self.mass = newMass;
     }
 
