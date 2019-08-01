@@ -80,4 +80,8 @@ impl ConvexPolygon {
     pub fn get_velocity(&self) -> [f64; 2] {
         self.velocities
     }
+
+    pub fn setVelocities(&mut self, velocities: [f64; 2]) {
+        self.velocities = velocities;
+    }
 }
