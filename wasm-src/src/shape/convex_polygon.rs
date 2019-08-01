@@ -25,39 +25,47 @@ impl ConvexPolygon {
         }
     }
 
-    pub fn getX(&self) -> f64 {
+    pub fn get_x(&self) -> f64 {
         self.coordinates[0]
     }
 
-    pub fn getY(&self) -> f64 {
+    pub fn set_x(&mut self, value: f64) {
+        self.coordinates[0] = value;
+    }
+
+    pub fn get_y(&self) -> f64 {
         self.coordinates[1]
     }
 
-    pub fn getVelocityX(&self) -> f64 {
+    pub fn set_y(&mut self, value: f64) {
+        self.coordinates[1] = value;
+    }
+
+    pub fn get_velocity_x(&self) -> f64 {
         self.velocities[0]
     }
 
-    pub fn getVelocityY(&self) -> f64 {
+    pub fn get_velocity_y(&self) -> f64 {
         self.velocities[1]
     }
 
-    pub fn setVelocityX(&mut self, newV: f64) {
-        self.velocities[0] = newV;
+    pub fn set_velocity_x(&mut self, new_v: f64) {
+        self.velocities[0] = new_v;
     }
 
-    pub fn setVelocityY(&mut self, newV: f64){
-        self.velocities[1] = newV;
+    pub fn set_velocity_y(&mut self, new_v: f64) {
+        self.velocities[1] = new_v;
     }
 
-    pub fn getMass(&self) -> f64 {
+    pub fn get_mass(&self) -> f64 {
         self.mass
     }
 
-    pub fn setMass(mut self, newMass: f64) {
-        self.mass = newMass;
+    pub fn set_mass(mut self, new_mass: f64) {
+        self.mass = new_mass;
     }
 
-    pub fn addVertex(&mut self, x: f64, y: f64) {
+    pub fn add_vertex(&mut self, x: f64, y: f64) {
         self.vertices.push(vertex::Vertex {
             coordinates: [x, y],
         });
@@ -65,11 +73,11 @@ impl ConvexPolygon {
 }
 
 impl ConvexPolygon {
-    pub fn getAllVertices(&self) -> &Vec<vertex::Vertex> {
+    pub fn get_all_vertices(&self) -> &Vec<vertex::Vertex> {
         return &self.vertices;
     }
 
-    pub fn getVelocity(&self) -> [f64; 2] {
+    pub fn get_velocity(&self) -> [f64; 2] {
         self.velocities
     }
 }

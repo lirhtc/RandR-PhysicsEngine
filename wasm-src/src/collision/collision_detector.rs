@@ -1,4 +1,4 @@
-use super::super::shape::ConvexPolygon;
+use crate::shape::ConvexPolygon;
 use wasm_bindgen::prelude::*;
 use std::cmp;
 use std::f64;
@@ -29,7 +29,7 @@ impl CollisionDetectorAabb {
     // in the order specified above
     fn get_aabb_boundaries(polygon: &ConvexPolygon) -> [f64; 4] {
         let mut boundary = [f64::MAX, f64::MIN, f64::MAX, f64::MIN];
-        let vertex_iter = polygon.getAllVertices().iter();
+        let vertex_iter = polygon.get_all_vertices().iter();
         for vertex in vertex_iter {
             boundary[0] = f64::min(vertex.coordinates[0], boundary[0]);
             boundary[1] = f64::max(vertex.coordinates[0], boundary[1]);
@@ -69,10 +69,10 @@ mod tests {
 
     fn get_polygon(offset_x: f64, offset_y: f64) -> ConvexPolygon {
         let mut polygon = ConvexPolygon::new();
-        polygon.addVertex(0.0 + offset_x, 0.0 + offset_y);
-        polygon.addVertex(1.0 + offset_x, 0.0 + offset_y);
-        polygon.addVertex(1.0 + offset_x, 1.0 + offset_y);
-        polygon.addVertex(0.0 + offset_x, 1.0 + offset_y);
+        polygon.add_vertex(0.0 + offset_x, 0.0 + offset_y);
+        polygon.add_vertex(1.0 + offset_x, 0.0 + offset_y);
+        polygon.add_vertex(1.0 + offset_x, 1.0 + offset_y);
+        polygon.add_vertex(0.0 + offset_x, 1.0 + offset_y);
         return polygon;
     }
 }
