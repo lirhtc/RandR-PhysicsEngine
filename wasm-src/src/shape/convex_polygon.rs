@@ -84,4 +84,9 @@ impl ConvexPolygon {
     pub fn set_velocities(&mut self, velocities: [f64; 2]) {
         self.velocities = velocities;
     }
+
+    pub fn update(&mut self, delta: f64) {
+        self.set_x(self.get_x() + self.get_velocity_x() * delta);
+        self.set_y(self.get_y() + self.get_velocity_y() * delta);
+    }
 }
