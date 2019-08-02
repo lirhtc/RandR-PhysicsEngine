@@ -3,10 +3,6 @@
 use wasm_bindgen::prelude::*;
 use std::ptr;
 
-/*
- * Defination of the Shape type. It defined in a js file
- * 
- */
 #[wasm_bindgen]
 extern "C" {
     // Shape will be stored as a ref to a js object
