@@ -8,6 +8,7 @@ pub struct CollisionDetectorAabb {}
 
 #[wasm_bindgen]
 impl CollisionDetectorAabb {
+    #[wasm_bindgen(constructor)]
     pub fn new() -> CollisionDetectorAabb {
         CollisionDetectorAabb {}
     }

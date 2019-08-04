@@ -72,18 +72,18 @@ function prepareStage() {
     window.app = app;
     app.renderer.backgroundColor = 0x061639;
     document.getElementById("app").appendChild(app.view);
-    window.gwasm.default("./wasm_resource/Eletron_Wasm_bg.wasm")
+    window.gwasm.default("../wasm-src/pkg/Eletron_Wasm_bg.wasm")
         .then(
             t => {
-                let wo = new gwasm.World();
-                let engin = new gwasm.Engine(wo)
-                window.engine = engin;
-                setInterval(function () {
-                    engin.tick(10)
-                }, 10)
-                document.getElementById("twobody").disabled = false;
-                document.getElementById("threebody").disabled = false;
-                document.getElementById("add_random").disabled = false;
+                // let wo = new gwasm.World();
+                // let engin = new gwasm.Engine(wo)
+                // window.en    gine = engin;
+                // setInterval(function () {
+                //     engin.tick(10)
+                // }, 10)
+                // document.getElementById("twobody").disabled = false;
+                // document.getElementById("threebody").disabled = false;
+                // document.getElementById("add_random").disabled = false;
             });
 }
 

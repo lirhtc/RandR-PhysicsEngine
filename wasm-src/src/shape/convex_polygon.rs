@@ -16,6 +16,7 @@ pub struct ConvexPolygon {
 
 #[wasm_bindgen]
 impl ConvexPolygon {
+    #[wasm_bindgen(constructor)]
     pub fn new() -> ConvexPolygon {
         ConvexPolygon {
             coordinates: [0.0, 0.0],
@@ -89,4 +90,28 @@ impl ConvexPolygon {
         self.set_x(self.get_x() + self.get_velocity_x() * delta);
         self.set_y(self.get_y() + self.get_velocity_y() * delta);
     }
+}
+
+
+// ********************************************************************
+// ******************************* Test *******************************
+// ********************************************************************
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    pub fn test_polygon_update(){
+        let mut polygon = ConvexPolygon{
+            coordinates: [0.0, 2.0],
+            velocities: [1.0, 2.0],
+            mass: 11.0,
+            vertices: vec![]
+        };
+        polygon.update(1.0);
+        assert_eq!(polygon.get_x(), 1.0);
+        assert_eq!(polygon.get_y(), 4.0);
+    }
+
 }

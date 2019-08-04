@@ -20,6 +20,8 @@ pub struct SimpleWorld {
 
 #[wasm_bindgen]
 impl SimpleWorld {
+
+    #[wasm_bindgen(constructor)]
     pub fn new(id: i32) -> SimpleWorld {
         SimpleWorld {
             id,
@@ -40,7 +42,12 @@ impl SimpleWorld {
         for i in 0..length {
             self.polygons[i].update(delta);
         }
-        self.polygon_collision_resolv();
+        self.polygon_collision_resolve();
+    }
+
+    pub fn add_convex_polygon(&mut self, polygon: ConvexPolygon) -> usize{
+        self.polygons.push(polygon);
+        self.polygons.len()
     }
 }
 
@@ -50,7 +57,7 @@ impl SimpleWorld {
         return &mut self.polygons;
     }
 
-    pub fn polygon_collision_resolv(&mut self) {
+    pub fn polygon_collision_resolve(&mut self) {
         let length = self.polygons.len();
         for i in 0..length - 1 {
             let (first,second)  = self.polygons.as_mut_slice().split_at_mut(i + 1);
@@ -60,4 +67,35 @@ impl SimpleWorld {
             }
         }
     }
+}
+
+
+
+
+// ********************************************************************
+// ******************************* Test *******************************
+// ********************************************************************
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    pub fn world_updates_all_polygons(){
+        let mut world = SimpleWorld::new(1);
+        let mut polygon_1 = ConvexPolygon::new();
+        polygon_1.set_velocities([2.0, 3.0]);
+
+        let mut polygon_2 = ConvexPolygon::new();
+        polygon_2.set_velocities([5.0, 4.0]);
+
+        world.update(1.0);
+        assert_eq!(world.polygons.len(), 2);
+        assert_eq!(world.polygons[0].get_x(), 2.0);
+        assert_eq!(world.polygons[0].get_y(), 3.0);
+
+        assert_eq!(world.polygons[1].get_x(), 5.0);
+        assert_eq!(world.polygons[1].get_y(), 4.0);
+    }
+
 }

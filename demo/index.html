@@ -8,15 +8,15 @@
 </head>
 
 <body>
-  <script src="es6://./ShapeDefination.js"></script>
+  <!-- <script src="es6://../wasm-src/pkg/1.js"></script>-->
   <script src="es6://./demo.js"></script>
   <button onclick="demo_twoBody()" id="twobody" disabled=true>Two body</button>
   <button onclick="demo_threeBody()" id="threebody" disabled=true>Three body</button>
   <button onclick="demo_addRandom()" id="add_random" disabled=true>Random body</button>
   <script type="module">
-    import * as gwasm from 'es6://./wasm_resource/Eletron_Wasm.js'
+    import * as gwasm from 'es6://../wasm-src/pkg/Eletron_Wasm.js'
     window.gwasm = gwasm;
-    (prepareStage())()
+    prepareStage()
   </script>
   <div id="slider"></div>
   <script>
