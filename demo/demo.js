@@ -38,7 +38,6 @@ class Rectangle {
     setupGraphics() {
         let graphics = new PIXI.Graphics();
         graphics.beginFill(0xFFFF00);
-        graphics.lineStyle(5, 0xFF0000);
         graphics.drawRect(0, 0, this.width, this.height);
         this.graphics = graphics;
     }
@@ -83,4 +82,21 @@ class World {
     start() {
         setInterval(this.update.bind(this), 16);
     }
+}
+
+function runDemo() {
+    let a = new Rectangle(10, 10, 110, 10)
+    let c = new Rectangle(10, 10, 200, 10)
+    let d = new Rectangle(10, 10, 300, 10)
+    let b = new World()
+    a.setVelocity(10, 10)
+    c.setVelocity(-10, 10)
+    d.setVelocity(-10, 10)
+    app.stage.addChild(a.graphics)
+    app.stage.addChild(c.graphics)
+    app.stage.addChild(d.graphics)
+    b.addRect(a)
+    b.addRect(c)
+    b.addRect(d)
+    b.start()
 }
