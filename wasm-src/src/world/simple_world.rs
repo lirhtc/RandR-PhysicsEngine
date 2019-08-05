@@ -83,6 +83,17 @@ impl SimpleWorld {
             }
         }
     }
+
+    pub fn fixed_world_size(&mut self){
+        if self.config.unbound_world_size {
+            return;
+        }
+        let mut length = self.polygons.len();
+        for i in 0..length {
+            let mut first = self.polygons[i];
+            if (first.get_x() < 0.0) || (first.get_x() > (self.config.world_width - first.get))
+        }
+    }
 }
 
 

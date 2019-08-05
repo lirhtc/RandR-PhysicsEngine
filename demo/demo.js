@@ -56,6 +56,9 @@ class Rectangle {
         this._y = value;
         this.graphics.y = value;
     }
+    setMass(value) {
+        this.wasm_shape.set_mass(value);
+    }
 }
 
 class World {
@@ -89,9 +92,11 @@ function runDemo() {
     let c = new Rectangle(10, 10, 200, 10)
     let d = new Rectangle(10, 10, 300, 10)
     let b = new World()
-    a.setVelocity(10, 10)
-    c.setVelocity(-10, 10)
-    d.setVelocity(-10, 10)
+    a.setVelocity(1, 10)
+    a.setMass(30000000);
+    c.setVelocity(-600, 10)
+    d.setVelocity(-1, 10)
+    d.setMass(30000000);
     app.stage.addChild(a.graphics)
     app.stage.addChild(c.graphics)
     app.stage.addChild(d.graphics)
