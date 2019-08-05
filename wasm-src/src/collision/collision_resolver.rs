@@ -22,6 +22,9 @@ impl CollisionResolver {
         second.set_velocity_x(after_v_horizontal[1]);
         first.set_velocity_y(after_v_vertical[0]);
         second.set_velocity_y(after_v_vertical[1]);
+
+//        first.update(delta);
+//        second.update(delta);
     }
 }
 
