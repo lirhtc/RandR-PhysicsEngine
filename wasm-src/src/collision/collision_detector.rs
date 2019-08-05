@@ -37,6 +37,10 @@ impl CollisionDetectorAabb {
             boundary[2] = f64::min(vertex.coordinates[1], boundary[2]);
             boundary[3] = f64::max(vertex.coordinates[1], boundary[3]);
         }
+        boundary[0] += polygon.get_x();
+        boundary[1] += polygon.get_x();
+        boundary[2] += polygon.get_y();
+        boundary[3] += polygon.get_y();
         return boundary;
     }
 }

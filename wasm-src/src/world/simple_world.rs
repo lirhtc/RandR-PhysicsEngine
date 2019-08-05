@@ -1,6 +1,7 @@
 use crate::shape::ConvexPolygon;
 use wasm_bindgen::prelude::*;
 use crate::collision::{CollisionDetectorAabb, CollisionResolver};
+use wasm_bindgen::__rt::core::ptr::null;
 
 struct WorldConfiguration {
     enable_gravity: bool,
@@ -51,6 +52,14 @@ impl SimpleWorld {
 
     pub fn set_update_delta(&mut self, delta: f64) {
         self.config.delta = delta;
+    }
+
+    pub fn get_polygon_x_at(&self, idx: usize) -> f64 {
+        self.polygons[idx].get_x()
+    }
+
+    pub fn get_polygon_y_at(&self, idx: usize) -> f64 {
+        self.polygons[idx].get_y()
     }
 }
 
