@@ -29,7 +29,7 @@ impl CollisionDetectorAabb {
     // min_x, min_y, max_x, max_y
     // in the order specified above
     fn get_aabb_boundaries(polygon: &ConvexPolygon) -> [f64; 4] {
-        let mut boundary = *polygon.get_boundary();
+        let mut boundary = polygon.get_boundary();
         boundary[0] += polygon.get_x();
         boundary[1] += polygon.get_x();
         boundary[2] += polygon.get_y();

@@ -23,8 +23,6 @@ impl CollisionResolver {
         first.set_velocity_y(after_v_vertical[0]);
         second.set_velocity_y(after_v_vertical[1]);
 
-//        first.update(delta);
-//        second.update(delta);
     }
 }
 
@@ -40,6 +38,7 @@ impl CollisionResolver {
         polygon.set_x(polygon.get_x() - velocities[0] * delta);
         polygon.set_y(polygon.get_y() - velocities[1] * delta);
     }
+
 }
 
 

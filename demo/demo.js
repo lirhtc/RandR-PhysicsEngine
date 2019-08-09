@@ -88,20 +88,35 @@ class World {
 }
 
 function runDemo() {
-    let a = new Rectangle(10, 10, 110, 10)
-    let c = new Rectangle(10, 10, 200, 10)
-    let d = new Rectangle(10, 10, 300, 10)
+    let numPolygons = 20;
     let b = new World()
-    a.setVelocity(1, 10)
-    a.setMass(30000000);
-    c.setVelocity(-600, 10)
-    d.setVelocity(-1, 10)
-    d.setMass(30000000);
-    app.stage.addChild(a.graphics)
-    app.stage.addChild(c.graphics)
-    app.stage.addChild(d.graphics)
-    b.addRect(a)
-    b.addRect(c)
-    b.addRect(d)
+    for (let i = 0; i < numPolygons; i++) {
+
+        let polygon = new Rectangle(2, 2, Math.floor(Math.random() * 800), +Math.floor(Math.random() * 500));
+        polygon.setVelocity(Math.floor((Math.random() * 30 + 30)), Math.floor((Math.random() * 30 + 30)));
+        polygon.setMass(Math.floor((Math.random() * 300 + 100)))
+        app.stage.addChild(polygon.graphics)
+        b.addRect(polygon)
+    }
     b.start()
+    // let a = new Rectangle(10, 10, 110, 10)
+    // let c = new Rectangle(10, 10, 200, 10)
+    // let d = new Rectangle(10, 10, 300, 10)
+    // let b = new World()
+    // a.setVelocity(20, 20)
+    // a.setMass(30000);
+    // c.setVelocity(-60, 20)
+    // d.setVelocity(-20, 20)
+    // d.setMass(3000);
+    // app.stage.addChild(a.graphics)
+    // app.stage.addChild(c.graphics)
+    // app.stage.addChild(d.graphics)
+    // b.addRect(a)
+    // b.addRect(c)
+    // b.addRect(d)
+    // b.start()
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

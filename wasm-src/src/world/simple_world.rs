@@ -30,7 +30,7 @@ impl SimpleWorld {
                 gravity_value: 1.0,
                 unbound_world_size: false,
                 world_width: 800.0,
-                world_height: 800.0,
+                world_height: 600.0,
                 delta: 0.016,
             },
             polygons: Vec::new(),
@@ -84,18 +84,26 @@ impl SimpleWorld {
                 }
             }
         }
+
+        self.fixed_world_size();
     }
 
-//    pub fn fixed_world_size(&mut self){
-//        if self.config.unbound_world_size {
-//            return;
-//        }
-//        let mut length = self.polygons.len();
-//        for i in 0..length {
-//            let mut first = self.polygons[i];
-//            if (first.get_x() < 0.0) || (first.get_x() > (self.config.world_width - first.get))
-//        }
-//    }
+    pub fn fixed_world_size(&mut self){
+        if self.config.unbound_world_size {
+            return;
+        }
+        let  length = self.polygons.len();
+        for i in 0..length {
+            let first = &mut self.polygons[i];
+            let boundary = first.get_boundary();
+            if boundary[0] + first.get_x() < 0.0 || (first.get_x() + boundary[1]) > self.config.world_width {
+               first.reverse_velocity_x();
+            }
+            if boundary[2] + first.get_y()  < 0.0 || (boundary[3] + first.get_y()) > self.config.world_height {
+                first.reverse_velocity_y();
+            }
+        }
+    }
 }
 
 

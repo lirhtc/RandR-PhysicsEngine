@@ -99,8 +99,16 @@ impl ConvexPolygon {
         self.set_y(self.get_y() + self.get_velocity_y() * delta);
     }
 
-    pub fn get_boundary(&self)-> &[f64; 4]{
-        return &self.boundary;
+    pub fn get_boundary(&self)-> [f64; 4]{
+        return self.boundary;
+    }
+
+    pub fn reverse_velocity_x(&mut self){
+        self.velocities[0] = -self.velocities[0];
+    }
+
+    pub fn reverse_velocity_y(&mut self){
+        self.velocities[1] = -self.velocities[1];
     }
 }
 
