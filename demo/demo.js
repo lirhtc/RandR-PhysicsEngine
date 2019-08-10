@@ -88,7 +88,7 @@ class World {
 }
 
 function runDemo() {
-    let numPolygons = 20;
+    let numPolygons = 2000;
     let b = new World()
     for (let i = 0; i < numPolygons; i++) {
 
