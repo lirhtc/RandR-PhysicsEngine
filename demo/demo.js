@@ -9,7 +9,7 @@ function prepareStage() {
     window.app = app;
     app.renderer.backgroundColor = 0x061639;
     document.getElementById("app").appendChild(app.view);
-    window.wasm.default("../wasm-src/pkg/rhandr_physics_engine_bg.wasm")
+    window.wasm.default("./wasm_resource/rhandr_physics_engine_bg.wasm")
         .then(
             t => {});
 }
@@ -88,8 +88,19 @@ class World {
 }
 
 function runDemo() {
-    let numPolygons = 20;
-    let b = new World()
+    value = parseInt(document.getElementById('numP').value);
+    if (value === undefined || isNaN(value)) {
+        value = 0;
+    }
+    let numPolygons = value;
+    if (window.world === undefined) {
+        var b = new World();
+        var newWorld = true;
+        window.world = b;
+    } else {
+        var b = window.world;
+    }
+
     for (let i = 0; i < numPolygons; i++) {
 
         let polygon = new Rectangle(2, 2, Math.floor(Math.random() * 800), +Math.floor(Math.random() * 500));
@@ -98,25 +109,7 @@ function runDemo() {
         app.stage.addChild(polygon.graphics)
         b.addRect(polygon)
     }
-    b.start()
-    // let a = new Rectangle(10, 10, 110, 10)
-    // let c = new Rectangle(10, 10, 200, 10)
-    // let d = new Rectangle(10, 10, 300, 10)
-    // let b = new World()
-    // a.setVelocity(20, 20)
-    // a.setMass(30000);
-    // c.setVelocity(-60, 20)
-    // d.setVelocity(-20, 20)
-    // d.setMass(3000);
-    // app.stage.addChild(a.graphics)
-    // app.stage.addChild(c.graphics)
-    // app.stage.addChild(d.graphics)
-    // b.addRect(a)
-    // b.addRect(c)
-    // b.addRect(d)
-    // b.start()
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    if (newWorld) {
+        b.start();
+    }
 }
