@@ -1,5 +1,5 @@
 [package]
-name = "Eletron_Wasm"
+name = "rhandr_physics_engine"
 version = "0.1.0"
 authors = ["Ruiheng <tikka0755@gmail.com>"]
 edition = "2018"

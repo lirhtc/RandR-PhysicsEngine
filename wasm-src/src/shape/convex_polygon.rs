@@ -1,4 +1,6 @@
 use wasm_bindgen::prelude::*;
+use std::f64;
+
 
 mod vertex {
     pub struct Vertex {
@@ -11,16 +13,19 @@ pub struct ConvexPolygon {
     coordinates: [f64; 2],
     velocities: [f64; 2],
     mass: f64,
+    boundary: [f64;4 ],
     vertices: Vec<vertex::Vertex>,
 }
 
 #[wasm_bindgen]
 impl ConvexPolygon {
+    #[wasm_bindgen(constructor)]
     pub fn new() -> ConvexPolygon {
         ConvexPolygon {
             coordinates: [0.0, 0.0],
             velocities: [0.0, 0.0],
             mass: 1.0,
+            boundary:  [f64::MAX, f64::MIN, f64::MAX, f64::MIN],
             vertices: Vec::new(),
         }
     }
@@ -69,6 +74,10 @@ impl ConvexPolygon {
         self.vertices.push(vertex::Vertex {
             coordinates: [x, y],
         });
+        self.boundary[0] = f64::min(x, self.boundary[0]);
+        self.boundary[1] = f64::max(x, self.boundary[1]);
+        self.boundary[2] = f64::min(y, self.boundary[2]);
+        self.boundary[3] = f64::max(y, self.boundary[3]);
     }
 }
 
@@ -84,4 +93,46 @@ impl ConvexPolygon {
     pub fn set_velocities(&mut self, velocities: [f64; 2]) {
         self.velocities = velocities;
     }
+
+    pub fn update(&mut self, delta: f64) {
+        self.set_x(self.get_x() + self.get_velocity_x() * delta);
+        self.set_y(self.get_y() + self.get_velocity_y() * delta);
+    }
+
+    pub fn get_boundary(&self)-> [f64; 4]{
+        return self.boundary;
+    }
+
+    pub fn reverse_velocity_x(&mut self){
+        self.velocities[0] = -self.velocities[0];
+    }
+
+    pub fn reverse_velocity_y(&mut self){
+        self.velocities[1] = -self.velocities[1];
+    }
+}
+
+
+// ********************************************************************
+// ******************************* Test *******************************
+// ********************************************************************
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    pub fn test_polygon_update(){
+        let mut polygon = ConvexPolygon{
+            coordinates: [0.0, 2.0],
+            velocities: [1.0, 2.0],
+            mass: 11.0,
+            vertices: vec![],
+            boundary:[f64::MAX, f64::MIN, f64::MAX, f64::MIN],
+        };
+        polygon.update(1.0);
+        assert_eq!(polygon.get_x(), 1.0);
+        assert_eq!(polygon.get_y(), 4.0);
+    }
+
 }

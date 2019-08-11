@@ -1,66 +1,3 @@
-function demo_twoBody() {
-    app.stage.children.length = 0;
-    engine.clear_world();
-    var g = new Circle(10, 0x051BFA);
-    g.mass = 100000;
-    g.set_coordinate_x(390);
-    g.set_coordinate_y(300);
-    g.add_to_stage(app.stage);
-
-    var gg = new Circle(10, 0x05FA5E);
-    gg.mass = 10;
-    gg.set_coordinate_x(390);
-    gg.set_coordinate_y(200);
-    gg.velocity_x = 100;
-    gg.add_to_stage(app.stage);
-    engine.add_one(gg);
-    engine.add_one(g);
-};
-
-function demo_threeBody() {
-    app.stage.children.length = 0;
-    engine.clear_world();
-    var g = new Circle(10, 0x051BFA);
-    g.mass = 100000;
-    g.set_coordinate_x(390);
-    g.set_coordinate_y(300);
-    g.add_to_stage(app.stage);
-
-    var gg = new Circle(10, 0x05FA5E);
-    gg.mass = 10;
-    gg.set_coordinate_x(390);
-    gg.set_coordinate_y(200);
-    gg.velocity_x = 105;
-    gg.add_to_stage(app.stage);
-
-
-    var ggg = new Circle(10, 0x059AFA);
-    ggg.mass = 500;
-    ggg.set_coordinate_x(390);
-    ggg.set_coordinate_y(350);
-    ggg.velocity_x = 100;
-    ggg.add_to_stage(app.stage);
-
-    engine.add_one(ggg);
-    engine.add_one(gg);
-    engine.add_one(g);
-};
-
-
-function demo_addRandom() {
-    factor = Math.random() * 5
-    mass = Math.round(Math.pow(10, factor));
-    var g = new Circle(10, massToColor(mass));
-    g.mass = mass
-    g.set_coordinate_x(Math.round(Math.random() * 600) + 100);
-    g.set_coordinate_y(Math.round(Math.random() * 400) + 100);
-    g.set_velocity_x(Math.random() * 100 - 50);
-    g.set_velocity_y(Math.random() * 50 - 25);
-    g.add_to_stage(app.stage);
-    engine.add_one(g);
-};
-
-
 function prepareStage() {
     let app = new PIXI.Application({
         width: 800, // default: 800
@@ -72,37 +9,114 @@ function prepareStage() {
     window.app = app;
     app.renderer.backgroundColor = 0x061639;
     document.getElementById("app").appendChild(app.view);
-    window.gwasm.default("./wasm_resource/Eletron_Wasm_bg.wasm")
+    window.wasm.default("../wasm-src/pkg/rhandr_physics_engine_bg.wasm")
         .then(
-            t => {
-                let wo = new gwasm.World();
-                let engin = new gwasm.Engine(wo)
-                window.engine = engin;
-                setInterval(function () {
-                    engin.tick(10)
-                }, 10)
-                document.getElementById("twobody").disabled = false;
-                document.getElementById("threebody").disabled = false;
-                document.getElementById("add_random").disabled = false;
-            });
+            t => {});
 }
 
-var rgbToHex = function (rgb) {
-    var hex = Number(rgb).toString(16);
-    if (hex.length < 2) {
-        hex = "0" + hex;
+
+class Rectangle {
+    constructor(width, height, x, y) {
+        this.width = width;
+        this.height = height;
+        this._x = x;
+        this._y = y;
+        this.constructWasmRectangle(width, height, x, y);
+        this.setupGraphics();
     }
-    return hex;
-};
+    constructWasmRectangle(width, height, x, y) {
+        let shape = new wasm.ConvexPolygon()
+        shape.add_vertex(0, 0);
+        shape.add_vertex(width, 0);
+        shape.add_vertex(width, height);
+        shape.add_vertex(0, height);
+        shape.set_x(x);
+        shape.set_y(y);
+        this.wasm_shape = shape;
+    }
 
-var fullColorHex = function (r, g, b) {
-    var red = rgbToHex(r);
-    var green = rgbToHex(g);
-    var blue = rgbToHex(b);
-    return red + green + blue;
-};
+    setupGraphics() {
+        let graphics = new PIXI.Graphics();
+        graphics.beginFill(0xFFFF00);
+        graphics.drawRect(0, 0, this.width, this.height);
+        this.graphics = graphics;
+    }
 
-var massToColor = function (mass) {
-    let factor = Math.log10(mass);
-    return parseInt(fullColorHex(250, Math.round(factor * 50), 10), 16);
+    setVelocity(vx, vy) {
+        this.wasm_shape.set_velocity_x(vx);
+        this.wasm_shape.set_velocity_y(vy);
+    }
+
+    set x(value) {
+        this._x = value;
+        this.graphics.x = value;
+    }
+
+    set y(value) {
+        this._y = value;
+        this.graphics.y = value;
+    }
+    setMass(value) {
+        this.wasm_shape.set_mass(value);
+    }
+}
+
+class World {
+    constructor() {
+        this.shape = [];
+        this.wasm_world = new wasm.SimpleWorld(1);
+    }
+    addRect(rectangle) {
+        this.shape.push(rectangle);
+        this.wasm_world.add_convex_polygon(rectangle.wasm_shape);
+    }
+
+    update() {
+        this.wasm_world.update();
+        let length = this.shape.length;
+        for (let i = 0; i < length; i++) {
+            let x = this.wasm_world.get_polygon_x_at(i);
+            let y = this.wasm_world.get_polygon_y_at(i);
+            this.shape[i].x = x;
+            this.shape[i].y = y;
+        }
+    }
+
+    start() {
+        setInterval(this.update.bind(this), 16);
+    }
+}
+
+function runDemo() {
+    let numPolygons = 20;
+    let b = new World()
+    for (let i = 0; i < numPolygons; i++) {
+
+        let polygon = new Rectangle(2, 2, Math.floor(Math.random() * 800), +Math.floor(Math.random() * 500));
+        polygon.setVelocity(Math.floor((Math.random() * 30 + 30)), Math.floor((Math.random() * 30 + 30)));
+        polygon.setMass(Math.floor((Math.random() * 300 + 100)))
+        app.stage.addChild(polygon.graphics)
+        b.addRect(polygon)
+    }
+    b.start()
+    // let a = new Rectangle(10, 10, 110, 10)
+    // let c = new Rectangle(10, 10, 200, 10)
+    // let d = new Rectangle(10, 10, 300, 10)
+    // let b = new World()
+    // a.setVelocity(20, 20)
+    // a.setMass(30000);
+    // c.setVelocity(-60, 20)
+    // d.setVelocity(-20, 20)
+    // d.setMass(3000);
+    // app.stage.addChild(a.graphics)
+    // app.stage.addChild(c.graphics)
+    // app.stage.addChild(d.graphics)
+    // b.addRect(a)
+    // b.addRect(c)
+    // b.addRect(d)
+    // b.start()
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
