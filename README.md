@@ -30,6 +30,7 @@ npm i
 npm start
 ```
 
-Then you will see a new window with a button. Click the button to run the demo
+Then you will see a new window with two buttons. Input the number of particles you want and hit `Go demo`.
+2000 particles might be the up-limit for most PCs. 
 
 

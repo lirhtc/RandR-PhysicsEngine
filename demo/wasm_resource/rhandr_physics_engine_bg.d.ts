@@ -1,0 +1,27 @@
+/* tslint:disable */
+export const memory: WebAssembly.Memory;
+export function __wbg_collisionresolver_free(a: number): void;
+export function collisionresolver_collision_resolver_polygon_polygon(a: number, b: number, c: number): void;
+export function __wbg_simpleworld_free(a: number): void;
+export function simpleworld_new(a: number): number;
+export function simpleworld_update(a: number): void;
+export function simpleworld_add_convex_polygon(a: number, b: number): number;
+export function simpleworld_set_update_delta(a: number, b: number): void;
+export function simpleworld_get_polygon_x_at(a: number, b: number): number;
+export function simpleworld_get_polygon_y_at(a: number, b: number): number;
+export function __wbg_convexpolygon_free(a: number): void;
+export function convexpolygon_new(): number;
+export function convexpolygon_get_x(a: number): number;
+export function convexpolygon_set_x(a: number, b: number): void;
+export function convexpolygon_get_y(a: number): number;
+export function convexpolygon_set_y(a: number, b: number): void;
+export function convexpolygon_get_velocity_x(a: number): number;
+export function convexpolygon_get_velocity_y(a: number): number;
+export function convexpolygon_set_velocity_x(a: number, b: number): void;
+export function convexpolygon_set_velocity_y(a: number, b: number): void;
+export function convexpolygon_get_mass(a: number): number;
+export function convexpolygon_set_mass(a: number, b: number): void;
+export function convexpolygon_add_vertex(a: number, b: number, c: number): void;
+export function __wbg_collisiondetectoraabb_free(a: number): void;
+export function collisiondetectoraabb_new(): number;
+export function collisiondetectoraabb_collision_detect_polygon_polygon(a: number, b: number): number;
