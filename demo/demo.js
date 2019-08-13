@@ -9,7 +9,7 @@ function prepareStage() {
     window.app = app;
     app.renderer.backgroundColor = 0x061639;
     document.getElementById("app").appendChild(app.view);
-    window.wasm.default("./wasm_resource/rhandr_physics_engine_bg.wasm")
+    window.wasm.default("../wasm-src/pkg/rhandr_physics_engine_bg.wasm")
         .then(
             t => {});
 }
