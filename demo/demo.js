@@ -71,14 +71,16 @@ class World {
         this.wasm_world.add_convex_polygon(rectangle.wasm_shape);
     }
 
-    update() {
+    update(bencheMark = false) {
         this.wasm_world.update();
-        let length = this.shape.length;
-        for (let i = 0; i < length; i++) {
-            let x = this.wasm_world.get_polygon_x_at(i);
-            let y = this.wasm_world.get_polygon_y_at(i);
-            this.shape[i].x = x;
-            this.shape[i].y = y;
+        if (!benchMark) {
+            let length = this.shape.length;
+            for (let i = 0; i < length; i++) {
+                let x = this.wasm_world.get_polygon_x_at(i);
+                let y = this.wasm_world.get_polygon_y_at(i);
+                this.shape[i].x = x;
+                this.shape[i].y = y;
+            }
         }
     }
 
@@ -112,4 +114,40 @@ function runDemo() {
     if (newWorld) {
         b.start();
     }
+}
+
+function benchMark() {
+    let loops = 20;
+    let polygons = 200;
+    let result = [];
+    let b = new wasm.SimpleWorld(1);
+    for (let i = 0; i < loops; i++) {
+        for (let j = 0; j < polygons; j++) {
+            let x = Math.floor(Math.random() * 800);
+            let y = Math.floor(Math.random() * 500);
+            let shape = new wasm.ConvexPolygon()
+            shape.add_vertex(0, 0);
+            shape.add_vertex(2, 0);
+            shape.add_vertex(2, 2);
+            shape.add_vertex(0, 2);
+            shape.set_x(x);
+            shape.set_y(y);
+            shape.set_velocity_x(Math.floor((Math.random() * 30 + 30)));
+            shape.set_velocity_y(Math.floor((Math.random() * 30 + 30)));
+            shape.set_mass(Math.floor((Math.random() * 300 + 100)))
+            b.add_convex_polygon(shape);
+        }
+        let start = new Date().getTime();
+        for (let j = 0; j < 100; j++) {
+            b.update();
+        }
+        let end = new Date().getTime();
+        result.push({
+            "counts": (i + 1) * 200,
+            "time": end - start,
+            "frame_cose": (end - start) / 100,
+        })
+
+    }
+    return result;
 }
