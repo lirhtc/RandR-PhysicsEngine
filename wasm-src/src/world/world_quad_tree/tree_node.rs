@@ -17,6 +17,7 @@ struct TreeNode {
     polygons: Vec<ConvexPolygon>,
     bounds: Rectangle,
     children: Option<[Box<TreeNode>; 4]>,
+    capacity: usize,
 }
 
 impl Rectangle {
@@ -49,12 +50,13 @@ impl Rectangle {
 #[wasm_bindgen]
 impl TreeNode {
     #[wasm_bindgen(constructor)]
-    pub fn new(level: i16, bounds: Rectangle) -> TreeNode {
+    pub fn new(level: i16, bounds: Rectangle, capacity: usize) -> TreeNode {
         TreeNode {
             level,
             polygons: Vec::new(),
             bounds,
             children: None,
+            capacity,
         }
     }
 
@@ -64,10 +66,10 @@ impl TreeNode {
         let x = self.bounds.get_x();
         let y = self.bounds.get_y();
         let level = self.level + 1;
-        let node_1 = TreeNode::new(level, Rectangle::new(x, y, sub_width, sub_height));
-        let node_2 = TreeNode::new(level, Rectangle::new(x + sub_width, y, sub_width, sub_height));
-        let node_3 = TreeNode::new(level, Rectangle::new(x + sub_width, y + sub_height, sub_width, sub_height));
-        let node_4 = TreeNode::new(level, Rectangle::new(x, y + sub_height, sub_width, sub_height));
+        let node_1 = TreeNode::new(level, Rectangle::new(x, y, sub_width, sub_height), self.capacity);
+        let node_2 = TreeNode::new(level, Rectangle::new(x + sub_width, y, sub_width, sub_height), self.capacity);
+        let node_3 = TreeNode::new(level, Rectangle::new(x + sub_width, y + sub_height, sub_width, sub_height), self.capacity);
+        let node_4 = TreeNode::new(level, Rectangle::new(x, y + sub_height, sub_width, sub_height), self.capacity);
         self.children = Option::Some([
             Box::new(node_1),
             Box::new(node_2),
@@ -95,15 +97,45 @@ impl TreeNode {
         }
     }
 
-    pub fn insert(&mut self, polygon: &ConvexPolygon) {
-        let check = self.children.is_some();
-        let check_ga = self.children.is_none();
+    pub fn insert(&mut self, polygon: ConvexPolygon) {
+        println!("Prepare to insert");
         if self.children.is_some() {
-            let quadrant_index = (self.get_quadrant_for_polygon(polygon) - 1) as usize;
-            let children: &mut [Box<TreeNode>; 4] = self.children.as_mut().unwrap().borrow_mut();
-            let child: &mut TreeNode = children[quadrant_index].borrow_mut();
-            child.insert(polygon);
+            let child_index = self.get_quadrant_for_polygon(&polygon);
+            if child_index != 0 {
+                let quadrant_index = (child_index - 1) as usize;
+                let children: &mut [Box<TreeNode>; 4] = self.children.as_mut().unwrap().borrow_mut();
+                let child: &mut TreeNode = children[quadrant_index].borrow_mut();
+                child.insert(polygon);
+                return;
+            }
         }
+        println!("Prepare to insert into polygons, current size {}", self.polygons.len());
+        self.polygons.push(polygon);
+        println!("After insertion size {}", self.polygons.len());
+        if self.polygons.len() > self.capacity && self.children.is_none(){
+            self.split();
+            let current_polygons = self.polygons.to_owned().clone();
+            self.polygons =  Vec::new();
+            for polygon in current_polygons {
+//                let new_clone = polygon.clone();
+                self.insert(polygon);
+            }
+        }
+    }
+
+    pub fn update(&mut self, delta:f64) {
+        if self.children.is_some() {
+            let  children: &mut[Box<TreeNode>; 4] =  self.children.as_mut().unwrap().borrow_mut();
+            for mut child in children{
+                child.update(delta);
+            }
+        } else {
+            let polygons: &mut Vec<ConvexPolygon> = self.polygons.borrow_mut();
+            for mut polygon in polygons {
+                polygon.update(delta);
+            }
+        }
+
     }
 
     fn quadrant_position_check(&self, x: f64, y: f64, width: f64, height: f64, polygon: &ConvexPolygon) -> i8 {
@@ -143,10 +175,11 @@ impl TreeNode {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use core::borrow::Borrow;
 
     #[test]
     pub fn polygon_on_quadrant_1() {
-        let node = get_node();
+        let node = get_node(4);
         let polygon = get_polygon(6.0, 1.0, 2.0, 2.0);
         let index = node.get_quadrant_for_polygon(&polygon);
         assert_eq!(index, 1);
@@ -154,7 +187,7 @@ mod tests {
 
     #[test]
     pub fn large_polygon_on_quadrant_1() {
-        let node = get_node();
+        let node = get_node(4);
         let polygon = get_polygon(6.0, 1.0, 4.0, 2.0);
         let index = node.get_quadrant_for_polygon(&polygon);
         assert_eq!(index, 0);
@@ -162,7 +195,7 @@ mod tests {
 
     #[test]
     pub fn polygon_on_quadrant_2() {
-        let node = get_node();
+        let node = get_node(4);
         let polygon = get_polygon(1.0, 1.0, 2.0, 2.0);
         let index = node.get_quadrant_for_polygon(&polygon);
         assert_eq!(index, 2);
@@ -170,7 +203,7 @@ mod tests {
 
     #[test]
     pub fn large_polygon_on_quadrant_2() {
-        let node = get_node();
+        let node = get_node(4);
         let polygon = get_polygon(1.0, 1.0, 4.0, 2.0);
         let index = node.get_quadrant_for_polygon(&polygon);
         assert_eq!(index, 0);
@@ -178,7 +211,7 @@ mod tests {
 
     #[test]
     pub fn polygon_on_quadrant_3() {
-        let node = get_node();
+        let node = get_node(4);
         let polygon = get_polygon(1.0, 6.0, 2.0, 2.0);
         let index = node.get_quadrant_for_polygon(&polygon);
         assert_eq!(index, 3);
@@ -186,7 +219,7 @@ mod tests {
 
     #[test]
     pub fn large_polygon_on_quadrant_3() {
-        let node = get_node();
+        let node = get_node(4);
         let polygon = get_polygon(1.0, 6.0, 2.0, 4.0);
         let index = node.get_quadrant_for_polygon(&polygon);
         assert_eq!(index, 0);
@@ -194,7 +227,7 @@ mod tests {
 
     #[test]
     pub fn polygon_on_quadrant_4() {
-        let node = get_node();
+        let node = get_node(4);
         let polygon = get_polygon(6.0, 6.0, 2.0, 2.0);
         let index = node.get_quadrant_for_polygon(&polygon);
         assert_eq!(index, 4);
@@ -202,13 +235,74 @@ mod tests {
 
     #[test]
     pub fn large_polygon_on_quadrant_4() {
-        let node = get_node();
+        let node = get_node(4);
         let polygon = get_polygon(6.0, 6.0, 2.0, 4.0);
         let index = node.get_quadrant_for_polygon(&polygon);
         assert_eq!(index, 0);
     }
 
-    fn get_node() -> TreeNode {
+    #[test]
+    pub fn insert_polygon_belongs_to_parent() {
+        let mut root_node = get_node(4);
+        let polygon = get_polygon(6.0, 6.0, 2.0, 4.0);
+        root_node.insert(polygon);
+        assert_eq!(root_node.polygons.len(), 1);
+        assert!(root_node.children.is_none());
+    }
+
+    #[test]
+    pub fn insert_polygons_parent_should_split_1() {
+        let mut root_node = get_node(4);
+
+        let polygon = get_polygon(1.0, 1.0, 1.0, 1.0);
+        root_node.insert(polygon);
+
+        let polygon = get_polygon(6.0, 1.0, 1.0, 1.0);
+        root_node.insert(polygon);
+
+        let polygon = get_polygon(6.0, 6.0, 1.0, 1.0);
+        root_node.insert(polygon);
+
+        let polygon = get_polygon(1.0, 6.0, 1.0, 1.0);
+        root_node.insert(polygon);
+
+        let polygon = get_polygon(6.0, 1.0, 1.0, 1.0);
+        root_node.insert(polygon);
+
+//        Small polygons can fit into sub nodes. There should be no polygons left after parent split.
+        assert_eq!(root_node.polygons.len(), 0);
+//        Parent should split
+        assert!(root_node.children.is_some());
+//        Child node should not split as the polygon counts in each node is smaller than capacity (4)
+        for i in 0..4 {
+            assert!(  root_node.children.as_ref().unwrap()[i].children.borrow().is_none());
+        }
+//        Child node should have 1 polygon in each quadrant except quadrant 1.
+        for i in 1..4 {
+            assert_eq!(root_node.children.as_ref().unwrap()[i].polygons.len(), 1 );
+        }
+        assert_eq!(root_node.children.as_ref().unwrap()[0].polygons.len(), 2 );
+    }
+
+    #[test]
+    pub fn insert_polygons_parent_should_split_2() {
+        let mut root_node = get_node(4);
+        for i in 0..5{
+            println!("{}", i);
+            let polygon = get_polygon(1.0, 1.0, 1.0, 1.0);
+            root_node.insert(polygon);
+        }
+//        Small polygons can fit into sub nodes. There should be no polygons left after parent split.
+        assert_eq!(root_node.polygons.len(), 0);
+//        Parent should split
+        assert!(root_node.children.is_some());
+//        Child node on quadrant 2 should split again
+        assert!( root_node.children.as_ref().unwrap()[1].children.is_some());
+//        Child node on quadrant 2 should have all 5 polygons after split
+        assert_eq!(root_node.borrow().children.as_ref().unwrap()[1].polygons.len(), 5);
+    }
+
+    fn get_node(capacity: usize) -> TreeNode {
         TreeNode {
             level: 0,
             polygons: vec![],
@@ -219,6 +313,7 @@ mod tests {
                 height: 10.0,
             },
             children: None,
+            capacity: 4,
         }
     }
 
