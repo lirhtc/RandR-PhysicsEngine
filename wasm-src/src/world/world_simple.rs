@@ -1,6 +1,6 @@
 use crate::shape::ConvexPolygon;
 use wasm_bindgen::prelude::*;
-use crate::collision::{CollisionDetectorAabb, CollisionResolver};
+use crate::collision::{CollisionDetectorAabb, CollisionResolver, CollisionDetectorSat};
 use wasm_bindgen::__rt::core::ptr::null;
 
 struct WorldConfiguration {
@@ -78,9 +78,12 @@ impl SimpleWorld {
         for i in 0..length {
             let (first, second) = self.polygons.as_mut_slice().split_at_mut(i + 1);
             for shape in second.iter_mut() {
-                let collided = CollisionDetectorAabb::collision_detect_polygon_polygon(&mut first[i], shape);
-                if collided {
-                    CollisionResolver::collision_resolver_polygon_polygon(&mut first[i],  shape, self.config.delta);
+                let aabb_collided = CollisionDetectorAabb::collision_detect_polygon_polygon(&mut first[i], shape);
+                if aabb_collided {
+                    let sat_collided = CollisionDetectorSat::collision_detect_polygon_polygon(&mut first[i], shape);
+                    if sat_collided{
+                        CollisionResolver::collision_resolver_polygon_polygon(&mut first[i],  shape, self.config.delta);
+                    }
                 }
             }
         }

@@ -43,27 +43,38 @@ impl CollisionDetectorAabb {
 // ******************************* Test *******************************
 // ********************************************************************
 
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn test_polygon_polygon_collision() {
-        // two overlap polygons
+    fn test_polygon_polygon_collision_two_overlap_polygons() {
+        // two overlap polygons show be detected as collided
         let first_polygon_overlap = get_polygon(0.0, 0.0);
         let second_polygon_overlap = get_polygon(0.0, 0.0);
-        assert!(CollisionDetectorAabb::collision_detect_polygon_polygon(&first_polygon_overlap, &second_polygon_overlap));
+        let is_collided =CollisionDetectorAabb::collision_detect_polygon_polygon(&first_polygon_overlap, &second_polygon_overlap);
+        assert!(is_collided);
+    }
 
-        // two cross polygons
+    #[test]
+    fn test_polygon_polygon_collision_two_cross_polygons() {
+        // two cross polygons show be detected as collided
         let first_polygon_cross = get_polygon(0.0, 0.0);
         let second_polygon_cross = get_polygon(0.5, 0.5);
-        assert!(CollisionDetectorAabb::collision_detect_polygon_polygon(&first_polygon_cross, &second_polygon_cross));
+        let is_collided = CollisionDetectorAabb::collision_detect_polygon_polygon(&first_polygon_cross, &second_polygon_cross);
+        assert!(is_collided);
+    }
 
-        // two non-cross polygons
+    #[test]
+    fn test_polygon_polygon_collision_two_separate_polygons() {
+        // two separate polygons show be detected as not collided
         let first_polygon_non_cross = get_polygon(0.0, 0.0);
         let second_polygon_non_cross = get_polygon(1.1, 0.0);
-        assert!(!CollisionDetectorAabb::collision_detect_polygon_polygon(&first_polygon_non_cross, &second_polygon_non_cross));
+        let is_collided = CollisionDetectorAabb::collision_detect_polygon_polygon(&first_polygon_non_cross, &second_polygon_non_cross);
+        assert!(!is_collided);
     }
+
 
     fn get_polygon(offset_x: f64, offset_y: f64) -> ConvexPolygon {
         let mut polygon = ConvexPolygon::new();
@@ -73,4 +84,5 @@ mod tests {
         polygon.add_vertex(0.0 + offset_x, 1.0 + offset_y);
         return polygon;
     }
+
 }

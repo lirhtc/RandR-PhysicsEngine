@@ -3,16 +3,20 @@ use std::f64;
 
 
 mod vertex {
+    #[derive(Debug, Clone)]
     pub struct Vertex {
         pub coordinates: [f64; 2],
     }
 }
 
 #[wasm_bindgen]
+#[derive(Debug, Clone)]
 pub struct ConvexPolygon {
     coordinates: [f64; 2],
     velocities: [f64; 2],
     mass: f64,
+//  The boundary of a polygon is ordered as:
+//    min_x, max_x, min_y, max_y
     boundary: [f64;4 ],
     vertices: Vec<vertex::Vertex>,
 }
